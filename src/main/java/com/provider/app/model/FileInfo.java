@@ -1,11 +1,11 @@
 package com.provider.app.model;
 
-public class File {
+public class FileInfo {
 
 	
 	private String url,name;
 
-	public File(String url, String name) {
+	public FileInfo(String url, String name) {
 		super();
 		this.url = url;
 		this.name = name;
