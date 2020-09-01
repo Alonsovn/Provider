@@ -21,21 +21,32 @@ import java.util.stream.Collectors;
 import com.provider.app.message.ResponseMessage;
 import com.provider.app.model.FileInfo;
 import com.provider.app.service.IFileStorageService;
+import com.provider.app.service.Producer;
 
 @RequestMapping("/provider")
 @RestController
 public class FileController {
 
+	private final Producer producer;
 	@Autowired
 	IFileStorageService storageService;
 
+	
+	@Autowired
+	FileController(Producer producer){
+		this.producer = producer;
+	}
+
 	@PostMapping("/upload")
-	public ResponseEntity<ResponseMessage> readFile(@RequestParam("file") MultipartFile file) {
+	public ResponseEntity<ResponseMessage> uploadExcelFile(@RequestParam("file") MultipartFile file) {
 
 		String message = "";
-		try {
-			System.out.println(storageService.readExcelFile(file));
+		try {			
+			String jsonContent = storageService.uploadExcelFile(file).toString();
+			System.out.println("\n" + jsonContent + "\n");
 			message = "Uploaded the file successfully: " + file.getOriginalFilename();
+			producer.sendMessage(jsonContent);
+			storageService.deleteFile(file.getOriginalFilename());
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 		} catch (Exception e) {
 			message = "Could not Uploaded the file: " + file.getOriginalFilename() + "!";

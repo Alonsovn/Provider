@@ -18,9 +18,11 @@ public interface IFileStorageService {
 	public Resource load(String filename);
 
 	public void deleteAll();
+	
+	public void deleteFile(String fileName);
 
 	public Stream<Path> loadAll();
 
-	public List<Provider> readExcelFile(MultipartFile file);
+	public List<Provider> uploadExcelFile(MultipartFile file);
 
 }

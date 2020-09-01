@@ -3,13 +3,13 @@ package com.provider.app.model;
 public class Provider {
 
 	private int id, units, user;
-	private String weight, volume, value, trasnportType, warehouse, deliveryDate;
+	private String weight, volume, value, transportType, warehouse, deliveryDate;
 
 	public Provider() {
 	}
 
 
-	public Provider(int id, int units, int user, String weight, String volume, String value, String trasnportType,
+	public Provider(int id, int units, int user, String weight, String volume, String value, String transportType,
 			String warehouse, String deliveryDate) {
 		super();
 		this.id = id;
@@ -18,7 +18,7 @@ public class Provider {
 		this.weight = weight;
 		this.volume = volume;
 		this.value = value;
-		this.trasnportType = trasnportType;
+		this.transportType = transportType;
 		this.warehouse = warehouse;
 		this.deliveryDate = deliveryDate;
 	}
@@ -85,12 +85,12 @@ public class Provider {
 
 
 	public String getTrasnportType() {
-		return trasnportType;
+		return transportType;
 	}
 
 
-	public void setTrasnportType(String trasnportType) {
-		this.trasnportType = trasnportType;
+	public void setTransportType(String transportType) {
+		this.transportType = transportType;
 	}
 
 
@@ -116,9 +116,9 @@ public class Provider {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", weight=" + weight + ", volume=" + volume + ", units=" + units
-				+ ", trasnsport-type=" + trasnportType + ", warehouse=" + warehouse + ", user=" + user
-				+ ", delivery date=" + deliveryDate + "]";
+		return " {\"id\":" + id + ", \"weight\":\"" + weight + "\", \"volume\":\"" + volume + "\", \"units\":" + units
+				+ ", \"transport-type\":\"" + transportType + "\", \"warehouse\":\"" + warehouse + "\", \"user\":" + user
+				+ ", \"delivery date\":\"" + deliveryDate + "\"}";
 	}
 
 }

@@ -1,0 +1,15 @@
+spring:
+   kafka:
+     producer:
+        bootstrap-servers: localhost:9092
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+---
+spring:
+  servlet:
+    multipart:
+     max-file-size: 500KB
+     max-request-size: 500KB
+---
+server:
+  port: 8081

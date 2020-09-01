@@ -73,6 +73,15 @@ public class FileStorageImpl implements IFileStorageService {
 	public void deleteAll() {
 		FileSystemUtils.deleteRecursively(root.toFile());
 	}
+	
+	@Override
+	public void deleteFile(String fileName) {
+		File file = new File(root + "\\" + fileName);
+		if(file.delete()) {
+			System.out.println("File deleted");
+		}
+	}
+	
 
 	@Override
 	public Stream<Path> loadAll() {
@@ -84,7 +93,7 @@ public class FileStorageImpl implements IFileStorageService {
 	}
 
 	@Override
-	public List<Provider> readExcelFile(MultipartFile file) {
+	public List<Provider> uploadExcelFile(MultipartFile file) {
 		try {
 
 			/*
@@ -147,7 +156,7 @@ public class FileStorageImpl implements IFileStorageService {
 						// System.out.println("4");
 
 					} else if (cellIndex == 5) { // TransportType
-						prov.setTrasnportType(currentCell.getStringCellValue());
+						prov.setTransportType(currentCell.getStringCellValue());
 						// System.out.println("5");
 
 					} else if (cellIndex == 6) { // Warehouse
