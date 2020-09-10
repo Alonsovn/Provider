@@ -21,19 +21,18 @@ import java.util.stream.Collectors;
 import com.provider.app.message.ResponseMessage;
 import com.provider.app.model.FileInfo;
 import com.provider.app.service.IFileStorageService;
-import com.provider.app.service.Producer;
+import com.provider.app.service.ProviderProducer;
 
 @RequestMapping("/provider")
 @RestController
 public class FileController {
 
-	private final Producer producer;
+	private final ProviderProducer producer;
 	@Autowired
 	IFileStorageService storageService;
 
-	
 	@Autowired
-	FileController(Producer producer){
+	FileController(ProviderProducer producer) {
 		this.producer = producer;
 	}
 
@@ -41,7 +40,7 @@ public class FileController {
 	public ResponseEntity<ResponseMessage> uploadExcelFile(@RequestParam("file") MultipartFile file) {
 
 		String message = "";
-		try {			
+		try {
 			String jsonContent = storageService.uploadExcelFile(file).toString();
 			System.out.println("\n" + jsonContent + "\n");
 			message = "Uploaded the file successfully: " + file.getOriginalFilename();

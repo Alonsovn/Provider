@@ -2,8 +2,7 @@ package com.provider.app.model;
 
 public class FileInfo {
 
-	
-	private String url,name;
+	private String url, name;
 
 	public FileInfo(String url, String name) {
 		super();
@@ -26,6 +25,5 @@ public class FileInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
 }

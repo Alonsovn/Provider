@@ -73,15 +73,14 @@ public class FileStorageImpl implements IFileStorageService {
 	public void deleteAll() {
 		FileSystemUtils.deleteRecursively(root.toFile());
 	}
-	
+
 	@Override
 	public void deleteFile(String fileName) {
 		File file = new File(root + "\\" + fileName);
-		if(file.delete()) {
-			System.out.println("File deleted");
+		if (file.delete()) {
+			// System.out.println("File deleted");
 		}
 	}
-	
 
 	@Override
 	public Stream<Path> loadAll() {
@@ -136,7 +135,7 @@ public class FileStorageImpl implements IFileStorageService {
 					Cell currentCell = cellsInRow.next();
 
 					if (cellIndex == 0) { // ID
-						prov.setId((int) currentCell.getNumericCellValue());
+						prov.setId((long) currentCell.getNumericCellValue());
 						// System.out.println("0");
 
 					} else if (cellIndex == 1) { // Weight
@@ -169,6 +168,7 @@ public class FileStorageImpl implements IFileStorageService {
 
 					} else if (cellIndex == 8) { // DeliveryDate
 						prov.setDeliveryDate(currentCell.toString());
+						// prov.setDeliveryDate(currentCell.getDateCellValue());
 						// System.out.println("8");
 					}
 

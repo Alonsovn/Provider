@@ -18,13 +18,10 @@ public class ProviderApplication implements CommandLineRunner {
 		SpringApplication.run(ProviderApplication.class, args);
 	}
 
-	
 	@Override
 	public void run(String... arg) throws Exception {
 		storageService.deleteAll();
 		storageService.init();
 	}
-	
-	
 
 }
