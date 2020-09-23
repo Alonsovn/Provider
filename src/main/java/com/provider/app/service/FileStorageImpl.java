@@ -22,7 +22,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.provider.app.model.Provider;
+import com.provider.app.model.ExcelFile;
 
 import org.springframework.util.FileSystemUtils;
 
@@ -76,45 +76,27 @@ public class FileStorageImpl implements IFileStorageService {
 
 	@Override
 	public void deleteFile(String fileName) {
-		File file = new File(root + "\\" + fileName);
-		if (file.delete()) {
-			// System.out.println("File deleted");
+		try {
+			File file = new File(root + "\\" + fileName);
+			file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	@Override
-	public Stream<Path> loadAll() {
+	public List<ExcelFile> uploadExcelFile(MultipartFile file) {
 		try {
-			return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
-		} catch (IOException e) {
-			throw new RuntimeException("Could not load the files!");
-		}
-	}
-
-	@Override
-	public List<Provider> uploadExcelFile(MultipartFile file) {
-		try {
-
-			/*
-			 * System.out.println("Reading excel file... path:" ); FileInputStream excelFile
-			 * = new FileInputStream(new File(
-			 * "C://Users//USER//Documents//Workspace//Eclipse//Provider//uploads//customers.xlsx"
-			 * )); System.out.println("File got it"); Workbook workbook = new
-			 * XSSFWorkbook(excelFile); System.out.println("workbook created");
-			 */
-			// Path tempDir = Files.createDirectories(root);
-			// //Files.createTempDirectory("");
 			File tempFile = root.resolve(file.getOriginalFilename()).toFile();
 			Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-
-			// file.transferTo(tempFile);
 
 			Workbook workbook = WorkbookFactory.create(tempFile);
 
 			Sheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rows = sheet.iterator();
 
-			List<Provider> lstCustomers = new ArrayList<Provider>();
+			List<ExcelFile> excelFileRecords = new ArrayList<ExcelFile>();
 
 			int rowNumber = 0;
 			while (rows.hasNext()) {
@@ -128,66 +110,56 @@ public class FileStorageImpl implements IFileStorageService {
 
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-				Provider prov = new Provider();
+				ExcelFile excelFile = new ExcelFile();
 
 				int cellIndex = 0;
 				while (cellsInRow.hasNext()) {
 					Cell currentCell = cellsInRow.next();
 
 					if (cellIndex == 0) { // ID
-						prov.setId((long) currentCell.getNumericCellValue());
-						// System.out.println("0");
+						excelFile.setId((long) currentCell.getNumericCellValue());
 
 					} else if (cellIndex == 1) { // Weight
-						prov.setWeight(currentCell.getStringCellValue());
-						// System.out.println("1");
+						excelFile.setWeight(currentCell.getStringCellValue());
 
 					} else if (cellIndex == 2) { // Volume
-						prov.setVolume(currentCell.getStringCellValue());
-						// System.out.println("2");
+						excelFile.setVolume(currentCell.getStringCellValue());
 
 					} else if (cellIndex == 3) { // Value
-						prov.setValue(currentCell.getStringCellValue());
-						// System.out.println("3");
+						excelFile.setValue(currentCell.getStringCellValue());
 
 					} else if (cellIndex == 4) { // Units
-						prov.setUnits((int) currentCell.getNumericCellValue());
-						// System.out.println("4");
+						excelFile.setUnits((int) currentCell.getNumericCellValue());
 
 					} else if (cellIndex == 5) { // TransportType
-						prov.setTransportType(currentCell.getStringCellValue());
-						// System.out.println("5");
+						excelFile.setTransportType(currentCell.getStringCellValue());
 
 					} else if (cellIndex == 6) { // Warehouse
-						prov.setWarehouse(currentCell.getStringCellValue());
-						// System.out.println("6");
+						excelFile.setWarehouse(currentCell.getStringCellValue());
 
 					} else if (cellIndex == 7) { // User
-						prov.setUser((int) currentCell.getNumericCellValue());
-						// System.out.println("7");
+						excelFile.setUser((int) currentCell.getNumericCellValue());
 
 					} else if (cellIndex == 8) { // DeliveryDate
-						prov.setDeliveryDate(currentCell.toString());
-						// prov.setDeliveryDate(currentCell.getDateCellValue());
-						// System.out.println("8");
+						excelFile.setDeliveryDate(stringToDate(currentCell.toString()));
 					}
 
 					cellIndex++;
 				}
 
-				lstCustomers.add(prov);
+				excelFileRecords.add(excelFile);
 			}
 
 			// Close WorkBook
 			workbook.close();
 
-			return lstCustomers;
+			return excelFileRecords;
 		} catch (IOException e) {
 			throw new RuntimeException("FAIL! -> message = " + e.getMessage());
 		}
 	}
 
-	public Date StringToDate(String s) {
+	public Date stringToDate(String s) {
 
 		Date result = null;
 		try {

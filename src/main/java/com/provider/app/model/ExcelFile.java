@@ -1,16 +1,20 @@
 package com.provider.app.model;
 
-public class Provider {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class ExcelFile {
 
 	private Long id;
 	private int units, user;
-	private String weight, volume, value, transportType, warehouse, deliveryDate;
+	private String weight, volume, value, transportType, warehouse;
+	Date deliveryDate;
 
-	public Provider() {
+	public ExcelFile() {
 	}
 
-	public Provider(Long id, int units, int user, String weight, String volume, String value, String transportType,
-			String warehouse, String deliveryDate) {
+	public ExcelFile(Long id, int units, int user, String weight, String volume, String value, String transportType,
+			String warehouse, Date deliveryDate) {
 		super();
 		this.id = id;
 		this.units = units;
@@ -87,19 +91,20 @@ public class Provider {
 		this.warehouse = warehouse;
 	}
 
-	public String getDeliveryDate() {
+	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(String deliveryDate) {
+	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 
 	@Override
 	public String toString() {
-		return " {\"id\":" + id + ", \"weight\":\"" + weight + "\", \"volume\":\"" + volume + "\", \"value\":\"" + value +"\", \"units\":" + units
-				+ ", \"transportType\":\"" + transportType + "\", \"warehouse\":\"" + warehouse + "\", \"user\":" + user
-				+ ", \"deliveryDate\":\"" + deliveryDate + "\"}";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return String.format(
+				"{\"id\":%d,\"weight\":\"%s\",\"volume\":\"%s\", \"value\":\"%s\", \"units\":%d, \"transportType\":\"%s\", \"warehouse\":\"%s\", \"user\":%d, \"deliveryDate\":\"%s\"}",
+				id, weight, volume, value, units, transportType, warehouse, user, dateFormat.format(deliveryDate));
 	}
 
 }

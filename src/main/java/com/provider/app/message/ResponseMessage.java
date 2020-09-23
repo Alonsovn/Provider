@@ -1,8 +1,14 @@
 package com.provider.app.message;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ResponseMessage {
 
 	private String message;
+
+	public ResponseMessage() {
+	}
 
 	public ResponseMessage(String message) {
 		super();
