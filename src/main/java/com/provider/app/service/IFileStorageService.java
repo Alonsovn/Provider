@@ -18,7 +18,9 @@ public interface IFileStorageService {
 	public void deleteAll();
 
 	public void deleteFile(String fileName);
+	
+	public String uploadFile(MultipartFile file);
 
-	public List<ExcelFile> uploadExcelFile(MultipartFile file);
+	public String uploadExcelFile(MultipartFile file);
 
 }

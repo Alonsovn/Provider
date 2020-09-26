@@ -1,7 +1,5 @@
 package com.provider.app.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.provider.app.kafka.ProviderProducer;
 import com.provider.app.message.ResponseMessage;
 import com.provider.app.service.IFileStorageService;
-import com.provider.app.service.ProviderProducer;
 
 @RequestMapping("/provider")
 @RestController
@@ -22,16 +20,14 @@ public class FileController {
 	@Autowired
 	private ProviderProducer producer;
 	@Autowired
-	IFileStorageService storageService;
-	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+	private IFileStorageService storageService;
 
 	@PostMapping("/upload")
 	public ResponseEntity<ResponseMessage> uploadExcelFile(@RequestParam("file") MultipartFile file) {
 
 		String message = "";
 		try {
-			String jsonContent = storageService.uploadExcelFile(file).toString();
-			logger.info(String.format("#### -> Converted excel file to json format -> %s", jsonContent));
+			String jsonContent = storageService.uploadFile(file);
 			message = "Uploaded the file successfully: " + file.getOriginalFilename();
 			producer.sendMessage(jsonContent);
 			storageService.deleteFile(file.getOriginalFilename());

@@ -1,4 +1,4 @@
-package com.provider.app.service;
+package com.provider.app.kafka;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,14 @@ public class ProviderProducer {
 	private KafkaTemplate<String, String> kafkaTemplate;
 
 	public void sendMessage(String message) {
-		logger.info(String.format("#### -> Provider Producer (Kafkfa), message -> %s", message));
-		this.kafkaTemplate.send(topicProviderToGateway, message);
-		logger.info("Message sent");
+		if (message != "[]" && !message.isEmpty()) {
+			logger.info(String.format("#### -> Provider Producer (Kafkfa), message -> %s", message));
+			this.kafkaTemplate.send(topicProviderToGateway, message);
+			logger.info("Message sent");
+		}else {
+			logger.info("Message empty.");
+		}
+		
 	}
 
 	public String getTopicProviderToGateway() {

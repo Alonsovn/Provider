@@ -22,16 +22,20 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.provider.app.controller.FileController;
 import com.provider.app.model.ExcelFile;
 
 import org.springframework.util.FileSystemUtils;
 
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FileStorageImpl implements IFileStorageService {
 
 	private final Path root = Paths.get("uploads");
+	private final Logger logger = LoggerFactory.getLogger(FileController.class);
 
 	@Override
 	public void init() {
@@ -86,8 +90,36 @@ public class FileStorageImpl implements IFileStorageService {
 	}
 
 	@Override
-	public List<ExcelFile> uploadExcelFile(MultipartFile file) {
+	public String uploadFile(MultipartFile file) {
+
+		String result;
+		String fileType = "";
+		String extension = file.getOriginalFilename().split("\\.")[1];
+
+		if (extension.contains("xlsx") || extension.contains("xls")) {
+			fileType = "excel";
+		}
+
+		switch (fileType) {
+		case "excel":
+			result = uploadExcelFile(file);
+			logger.info(String.format("#### -> Converted excel file to json format -> %s", result));
+			break;
+
+		default:
+			logger.info(String.format("#### -> Unknown file type -> %s", file.getOriginalFilename()));
+			result = "";
+			break;
+		}
+
+		return result;
+
+	}
+
+	@Override
+	public String uploadExcelFile(MultipartFile file) {
 		try {
+
 			File tempFile = root.resolve(file.getOriginalFilename()).toFile();
 			Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
 
@@ -153,7 +185,7 @@ public class FileStorageImpl implements IFileStorageService {
 			// Close WorkBook
 			workbook.close();
 
-			return excelFileRecords;
+			return excelFileRecords.toString();
 		} catch (IOException e) {
 			throw new RuntimeException("FAIL! -> message = " + e.getMessage());
 		}
